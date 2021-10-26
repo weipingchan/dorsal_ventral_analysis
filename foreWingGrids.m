@@ -15,10 +15,10 @@ end
 
 keyPts=keyPts0;
 for keyID=1:length(keyPts0)
-    keyPts(keyID,:)=findCloestPt([edgePt(:,2),edgePt(:,1)],keyPts0(keyID,:)); %Added April 15, 2020
+    keyPts(keyID,:)=findCloestPt([edgePt(:,2),edgePt(:,1)],keyPts0(keyID,:));
 end
 
-lower_wing_body_join=findCloestPt([edgePt(:,2),edgePt(:,1)],lower_wing_body_join0); %Added April 15, 2020
+lower_wing_body_join=findCloestPt([edgePt(:,2),edgePt(:,1)],lower_wing_body_join0);
 
 tipPtAdj=findCloestPt([edgePt(:,2),edgePt(:,1)],keyPts(2,:));
 keyPts=[keyPts(1,:);tipPtAdj];% Adjust tip point to fit on the edge

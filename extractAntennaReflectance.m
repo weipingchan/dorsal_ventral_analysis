@@ -21,7 +21,7 @@ function sppBothSidesAntSummary=extractAntennaReflectance(spp_mat_directory,both
 
              %%
             %Antennae extraction
-            disp('Begin to summarize multi-spectral reflectance on antenna');
+            disp('Begin to summarize multi-spectral reflectance on antennae');
             mask0=both_sides_morph{side}{1}{1};
             wingParts0=both_sides_morph{side}{1}{7};
             wingParts=wingParts0{1}+wingParts0{2}+wingParts0{3}+wingParts0{4};
@@ -48,7 +48,7 @@ function sppBothSidesAntSummary=extractAntennaReflectance(spp_mat_directory,both
             sppBothSidesAntSummary{2}{sideID}={-9999,{spScale}};
             if numberOfBlobs>0
                 try
-                    if numberOfBlobs>1  %Get antenae Bases
+                    if numberOfBlobs>1  %Get antennae bases
                         antennaeBaseList=[[NaN NaN];[NaN NaN]];
                         antennaeBaseList=[];
                         for k=1:numberOfBlobs
@@ -109,7 +109,7 @@ function sppBothSidesAntSummary=extractAntennaReflectance(spp_mat_directory,both
                             %Percentage from the tip, spectral reflectance, pixel distance from the tip, original coordination (x, y)
                                 %spectral reflectance: 740, 940, UV, UVF, F, white (R, G, B), whitePo1 (R, G, B), whitePo2 (R, G, B), FinRGB (R, G, B), PolDiff (R, G, B)
 
-                            %Determine if it's left or right antennae
+                            %Determine if it's a left or right antenna
                             ss01 = regionprops(oneAntenae,'centroid');
                             antCens=ss01.Centroid;
                             if numberOfBlobs<2
@@ -119,7 +119,7 @@ function sppBothSidesAntSummary=extractAntennaReflectance(spp_mat_directory,both
                                     rfAnt=2;
                                 end
                             else
-                                [iloc, ~] = ismember(antennaeBaseList,antennaeBase,'rows'); %If the base of the antennae is at left than it's the left one
+                                [iloc, ~] = ismember(antennaeBaseList,antennaeBase,'rows'); %If the base of the antenna is at left then it's the left one
                                 rfAnt=find(iloc);
                             end
 
@@ -138,19 +138,19 @@ function sppBothSidesAntSummary=extractAntennaReflectance(spp_mat_directory,both
                 %             else
                 %                 antChr0=body_ant_morph{3};
                 %             end
-                %             antChr=antChr0(side,:); %Antennae length, width, bolb width, degree of curved (all in mm)
+                %             antChr=antChr0(side,:); %Antennae length, width, bulb width, degree of curvature (all in mm)
                         catch
-                            disp('wrong antenna processing');
+                            disp('Wrong antenna processing');
                         end
                     end
                 catch
-                    disp('wrong antenna processing');
+                    disp('Wrong antenna processing');
                 end
             else
-                    disp('No Antennae');
+                    disp('No antennae');
             %             sppBothSidesAntSummary{1}{sideID}={-9999,{spScale}};
             %             sppBothSidesAntSummary{2}{sideID}={-9999,{spScale}};
             end
-            disp([vdlist{sideID},' side of Antennae in [',barcode,'] has been extracted' ]);
+            disp([vdlist{sideID},' side of antennae in [',barcode,'] has been extracted' ]);
         end
 end

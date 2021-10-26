@@ -34,7 +34,7 @@ end
                 if nnz(cropGrid)>0
                     gridData0=baseImg(cropGrid==1);
                     nullData=nullArea(cropGrid==1);
-                    gridData=gridData0(nullData==0); %Remove those irrelavant data
+                    gridData=gridData0(nullData==0); %Remove those irrelevant data
                     gridNullOrNot=mode(nullData);
                     if gridNullOrNot==0
                         avgvalue=mean(gridData);

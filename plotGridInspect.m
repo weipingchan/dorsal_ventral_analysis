@@ -18,7 +18,7 @@ wingGridsRH=gridsParameter{4}{2};
 
 imshowpair(plotbaseImg,plotrefineImg);hold on;
 plot(seg4PtsAll(:,1),seg4PtsAll(:,2),'r+'); plot(seg4PtsAll(:,1),seg4PtsAll(:,2),'ro');
-%plot all grids on Fore wings
+%plot all grids on forewings
 for i=2:size(wingGridsLF,1)-1
     gridPlot=reshape(wingGridsLF(i,:,:),[],2);
     plot(gridPlot(:,1),gridPlot(:,2),'r');
@@ -35,7 +35,7 @@ for j=2:size(wingGridsRF,2)-1
     gridPlot=reshape(wingGridsRF(:,j,:),[],2);
     plot(gridPlot(:,1),gridPlot(:,2),'r');
 end
-%plot all grids on Hind wings
+%plot all grids on hindwings
 for i=2:size(wingGridsLH,1)-1
     gridPlot=reshape(wingGridsLH(i,:,:),[],2);
     plot(gridPlot(:,1),gridPlot(:,2),'b');

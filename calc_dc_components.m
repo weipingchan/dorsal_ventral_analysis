@@ -1,7 +1,7 @@
 function [A0, C0] = calc_dc_components(ai)
 
 % Calculate DC components.
-% A0 and C0 are bias coefficeis, corresponding to a frequency of zero.
+% A0 and C0 are bias coefficients, corresponding to a frequency of zero.
 
     %% Maximum length of chain code
     k = size(ai, 2);

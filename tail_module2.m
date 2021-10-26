@@ -13,13 +13,13 @@ function tailinfo=tail_module2(gridsParameter_dorsal, scale, tailMinArea, side)
 %figure,imshowpair(originalAreaH,refineAreaH);
 
     tailraw=immultiply(originalAreaH,imcomplement(refineAreaH));
-    tailParts=bwareaopen(imdilate(imerode(tailraw,strel('disk',2)),strel('disk',2)),tailMinArea); %The value here determine how small can a tail be defined
+    tailParts=bwareaopen(imdilate(imerode(tailraw,strel('disk',2)),strel('disk',2)),tailMinArea); %The value here determines how small a tail can be defined
     forkRef=seg4Pts(3,:);
     bodyRef=seg4Pts(1,:);
 
     [tailL,nParts]=bwlabel(tailParts);
 
-    disp(['Totaly find ',num2str(nParts),' tail regions.']);
+    disp(['Totally find ',num2str(nParts),' tail regions.']);
     minBranchLength=5;
     if nParts>0 %run if we have at least one tail
         %BWtail0 = bwskel(logical(originalAreaH),'MinBranchLength',minBranchLength);
@@ -34,7 +34,7 @@ function tailinfo=tail_module2(gridsParameter_dorsal, scale, tailMinArea, side)
         catch
             [ip,jp] = find(bwmorph(immultiply(BWtail0,imcomplement(tailParts)),'endpoints'));
             forkPt0=findCloestPt([ip,jp],bodyRef);
-            forkPt=flip(forkPt0); %modified Sep, 30, 2020
+            forkPt=flip(forkPt0); 
             disp('No fork point. Use the endpoint close to body as the fork point.');
         end
 
@@ -108,8 +108,8 @@ function tailinfo=tail_module2(gridsParameter_dorsal, scale, tailMinArea, side)
                     DdB = bwdistgeodesic(boundaryIt,jb(1),ib(1),'quasi');
                     tailBoundaryL = DdB(ib(2),jb(2));
 
-                %%
-                %Find the corresponding grid for a given tail Base and boundary
+                %
+                %Find the corresponding grid for a given tail base and boundary
                 %length
                 tailBasegridXY=deriveGridCoordinates(gridPt, flip(tailBase));
                 tailBaseEndgridXY1=deriveGridCoordinates(gridPt, flip([ib(1),jb(1)]));
@@ -125,7 +125,7 @@ function tailinfo=tail_module2(gridsParameter_dorsal, scale, tailMinArea, side)
                 %{}{1}=tail mask
                 %{}{2}=XY coordination on the original image
                 %{}{3}=XY coordination projected on the summarized grid (begin from 1)
-                %{}{4}= [tail boundary Length, tail length, tail area, tail width, tailCurvature; curvature is unit less
+                %{}{4}= [tail boundary Length, tail length, tail area, tail width, tailCurvature; curvature is unitless
             catch
                 disp(['No. ',num2str(tailID),' tail failed in processing.']);
             end

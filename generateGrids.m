@@ -2,7 +2,7 @@ function wingGriddeep=generateGrids(seg4Pts,edgePt,numberOfIntervalDegree)
 %numberOfIntervalDegree=5;
 
 %%
-%Do a basic Grid first: haveing 2^3 * 2^3 grids
+%Do a basic grid first: having 2^3 * 2^3 grids
 numberOfIntervalDegree0=3;
 numberOfInterval0=2^numberOfIntervalDegree0;
 evenIntEdge0=getEvenSpaceForGrid(seg4Pts,edgePt,numberOfIntervalDegree0);
@@ -56,7 +56,7 @@ while 1
         for j=1:size(originalGrid,2)-1
             cendat=[originalGrid(i,j,:) ; originalGrid(i,j+1,:) ; originalGrid(i+1,j,:) ; originalGrid(i+1,j+1,:)];
             cen=mean(cendat);
-    %         inPt = inpolygon(cen(1),cen(2),cendat(:,:,1),cendat(:,:,2)); %Test if the centoid is in the polygon or not
+    %         inPt = inpolygon(cen(1),cen(2),cendat(:,:,1),cendat(:,:,2)); %Test if the centroid is in the polygon or not
     %         if inPt==0 %If not, use the closest point as the centroid
     %             cen=findCloestPt(reshape(cendat,[],2),reshape(cen,[],2));
     %         end

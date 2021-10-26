@@ -16,7 +16,7 @@ function [cc] = chaincode(b,unwrap)
 %             np is the number of pixels and each element is a pair (y,x) of
 %             pixel coordinates
 %   unwrap  - (optional, default=false) unwrap code;
-%             if enable phase inversions are eliminated
+%             if enabled phase inversions are eliminated
 %            
 %
 %   OUTPUT:
@@ -74,11 +74,11 @@ if size(n8c,1)>0
     for i=1:size(n8c,1)
         ss=[ss sprintf(' idx -> %d \n',n8c(i))];
     end
-    error('Curve isn''t 8-connected in elements: \n%s',ss);
+    error('Curve is not 8-connected in elements: \n%s',ss);
 end
 
 
-% convert dy,dx pairs to scalar indexes thinking to them (+1) as base-3 numbers
+% convert dy,dx pairs to scalar indices thinking to them (+1) as base-3 numbers
 % according to: idx=3*(dy+1)+(dx+1)=3dy+dx+4 (adding 1 to have idx starting
 % from 1)
 % Then use a mapping array cm

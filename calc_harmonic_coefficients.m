@@ -15,7 +15,7 @@ function output = calc_harmonic_coefficients(ai, n)
     %% Store this value to make computation faster
     two_n_pi = 2 * n * pi;
     
-    %% Compute Harmonic cofficients: an, bn, cn, dn
+    %% Compute Harmonic coefficients: an, bn, cn, dn
     sigma_a = 0;
     sigma_b = 0;
     sigma_c = 0;

@@ -15,7 +15,7 @@ end
 
 keyPts=keyPts0;
 for keyID=1:length(keyPts0)
-    keyPts(keyID,:)=findCloestPt([edgePt(:,2),edgePt(:,1)],keyPts0(keyID,:)); %Added April 15, 2020
+    keyPts(keyID,:)=findCloestPt([edgePt(:,2),edgePt(:,1)],keyPts0(keyID,:)); 
 end
 
 tipPtAdj=findCloestPt([edgePt(:,2),edgePt(:,1)],keyPts(2,:));

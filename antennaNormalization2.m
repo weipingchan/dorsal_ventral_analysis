@@ -12,7 +12,7 @@ function [antennaLRref_rescale, antennaLRrefmm]=antennaNormalization2(sppBothSid
                 [antMatmm_v, emptyFlag2_v] = normalize_antMat(antennae_v);
                 sizeCand=[size(antMatmm_d,1),size(antMatmm_v,1)];
                 sizeCand=sizeCand(sizeCand>20); %Antennae should be at least 2 mm long
-                keepLen=min(sizeCand); %Keep data from the tip of antenna in both dorsal and ventral side
+                keepLen=min(sizeCand); %Keep data from the tips of antennae in both dorsal and ventral sides
                 
                 if emptyFlag2_d==1
                     antMatmm_d=zeros(keepLen,21);

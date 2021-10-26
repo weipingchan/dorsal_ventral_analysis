@@ -21,7 +21,7 @@ end
 segEdgePts0=edgePt(min([rLoc1,rLoc2]):max([rLoc1,rLoc2]),:);
 segEdgePts1=[edgePt(max([rLoc1,rLoc2]):end,:) ; edgePt(1:min([rLoc1,rLoc2]),:)];
 
-%Calculate the distance of two different segment to see which one is closer
+%Calculate the distance of two different segments to see which one is closer
 %to our key points
 Dist01 = sum(sqrt(sum(bsxfun(@minus, segEdgePts0, kPt1).^2,2)));
 Dist02 = sum(sqrt(sum(bsxfun(@minus, segEdgePts0, kPt2).^2,2)));

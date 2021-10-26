@@ -1,6 +1,6 @@
 function output = fourier_approx(ai, n, m, normalized)
 
-% This function will generate position coordinates of fourier approximation of 
+% This function will generate position coordinates of Fourier approximation of 
 % chain code (ai).Number of harmonic elements (n), and number of points for 
 % reconstruction (m) must be specified.
 

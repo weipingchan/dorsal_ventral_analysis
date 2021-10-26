@@ -15,7 +15,7 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
     chainBeginPt=[chainCode.x0,chainCode.y0];
     maskChainCode=transpose(chainCode.code);
 
-    % Calculte traversl distance
+    % Calculate traversal distance
     xx = calc_traversal_dist(maskChainCode);
     % Starting point is assumed from [0 0]
     reconstShape0 = [0 0; xx]+chainBeginPt;
@@ -100,7 +100,7 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
     reconstructFFTShp = roipoly(wingMask,reconstructPts(:,1),reconstructPts(:,2));
     overlapArea = imdilate(reconstructFFTShp,strel('disk',5)) & wingMask;
     remainArea = wingMask~=overlapArea;
-    keepArea = bwareafilt(remainArea,[0, ornamentThreshold]); %Keep those regions in the refine mask
+    keepArea = bwareafilt(remainArea,[0, ornamentThreshold]); %Keep those regions in the refined mask
     [edB,edL] = bwboundaries(bwareafilt(remainArea,[ornamentThreshold,nnz(wingMask)]),'noholes');
     
     overlapAreaRef = imdilate(reconstructFFTShp,strel('disk',10)) & wingMask;
@@ -119,7 +119,7 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
                 Lorn=bwselect(edL,idy(ceil(length(idx)/2)),idx(ceil(length(idx)/2)));
 %                 figure,imshowpair(orn,Lorn);
                 reducedAreaRatio=nnz(immultiply(imcomplement(orn),Lorn))/nnz(Lorn);
-                if reducedAreaRatio>0.5 %If the reduced area is over 50%, the part must attached closely to the main mask but not point out
+                if reducedAreaRatio>0.5 %If the reduced area is over 50%, the part must be attached closely to the main mask but not point out
                     retainIdx(edID,:)=[mean(edL(Lorn),'all'), nnz(orn), 1];
                 else
                     retainIdx(edID,:)=[mean(edL(Lorn),'all'), nnz(orn), 0];
@@ -134,8 +134,8 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
         decisionIdx=[];
         for retID=1:size(retainCandidates,1)
             subIdx=retainIdx(retainIdx(:,1)==retainCandidates(retID,1),:);
-            decisionIdx0=[subIdx(1,1), subIdx(subIdx(:,2)==max(subIdx(:,2)),3)]; %Keep or not determined by the elements having the largest area
-            if size(decisionIdx0,1)>1,  decisionIdx0= decisionIdx0(1,:);, end; %Added April 18, 2020 to prevent 2 candidates
+            decisionIdx0=[subIdx(1,1), subIdx(subIdx(:,2)==max(subIdx(:,2)),3)]; %Keep or not determined by the elements with the largest area
+            if size(decisionIdx0,1)>1,  decisionIdx0= decisionIdx0(1,:);, end; 
             decisionIdx=[decisionIdx ; decisionIdx0];
         end
         

@@ -6,7 +6,7 @@ addpath(genpath(Code_directory)) %Add the library to the path
 
 vdlist={'dorsal','ventral'};
 
-%Convert double quotes to single quotes for the matlab version prior than
+%Convert double quotes to single quotes for the Matlab version prior to
 %2017
 if size(morph_mat_directory,2)==1 morph_mat_directory=morph_mat_directory{1};, end;
 if size(spp_mat_directory,2)==1 spp_mat_directory=spp_mat_directory{1};, end;
@@ -42,7 +42,7 @@ end
 
 
 %%
-all_morph_data = dir(fullfile(morph_mat_directory,'*morph-seg.mat')); %read only one layer of directory; '**/*morph-seg.mat': reald all subfolders
+all_morph_data = dir(fullfile(morph_mat_directory,'*morph-seg.mat')); %read only one layer of directory; '**/*morph-seg.mat': read all subfolders
 all_morph_name0=struct2dataset(all_morph_data);
 all_morph_name=all_morph_name0(:,1).name;
 fileID=find(contains(all_morph_name,[barcodein,'_']));
@@ -92,7 +92,7 @@ ventral_key_flip=[ventral_key_flip0(4,:);ventral_key_flip0(3,:);ventral_key_flip
 
 dorsal_scale=both_sides_morph{1}{1}{12};
 ventral_scale=both_sides_morph{2}{1}{12};
-%Create potential intact wing region based on ventral-dorsal mapping
+%Create potential intact wing region based on dorsal-ventral mapping
 disp('Begin to create potential wing area based on dosal-ventral sides mapping');
 
 %Check all wings
@@ -115,7 +115,7 @@ segLineRF=extractSegLineF(dorsal_wingRF,dorsal_key,'R');
 segLineLH=extractSegLineH(ventral_flip_wingLH,ventral_key_flip,'L');
 segLineRH=extractSegLineH(ventral_flip_wingRH,ventral_key_flip,'R');
 
-disp('The fore-hind wing joint lines are extracted from dosal and ventral sides');
+disp('The fore-hindwing joint lines are extracted from dosal and ventral sides');
 % figure,imshow(wingLF);hold on;
 % plot(segLineLF(:,1),segLineLF(:,2),'r.');
 % 
@@ -128,7 +128,7 @@ disp('The fore-hind wing joint lines are extracted from dosal and ventral sides'
 % figure,imshow(wingRH);hold on;
 % plot(segLineRH(:,1),segLineRH(:,2),'r.');
 
-%Map ventral-side hind wing on dorsal side hind wing
+%Map ventral-side hindwing on dorsal side hindwing
 segLineLH_dorsal=projectSegLine(dorsal_wingLH,dorsal_key,segLineLH,'L');
 segLineRH_dorsal=projectSegLine(dorsal_wingRH,dorsal_key,segLineRH,'R');
 segLineLF_ventral=projectSegLine(ventral_flip_wingLF,ventral_key_flip,segLineLF,'L');
@@ -150,7 +150,7 @@ segLineRF_ventral=projectSegLine(ventral_flip_wingRF,ventral_key_flip,segLineRF,
 
 % figure,imshowpair(potentialWingMask_LH_dorsal+potentialWingMask_RH_dorsal,nullArea_LH_dorsal+nullArea_RH_dorsal);
 % figure,imshowpair(potentialWingMask_LF_ventral+potentialWingMask_RF_ventral,nullArea_LF_ventral+nullArea_RF_ventral);
-disp('The potential wing area are estimated');
+disp('The potential wing area has been estimated');
 
 %%
 % numberOfIntervalDegree=5; %minimum is 3
@@ -179,18 +179,18 @@ if ~isempty(manualGridin)
         gridmat=gridmat0.(fieldName0);
         disp(['[',manualGridin,'] has been read into memory']);
         gridsParameter_dorsal=gridmat{1};
-        disp('Grids of dorsal wing is derived');
+        disp('Grids of dorsal wing are derived');
         gridsParameter_ventral=gridmat{2};
-        disp('Grids of ventral wing is derived');
+        disp('Grids of ventral wing are derived');
 else
     disp('Did not find corresponding grid files. Begin to generate grids.');
     %dorsal image
     gridsParameter_dorsal=allWingGrids(dorsal_wingLF,dorsal_wingRF,potentialWingMask_LH_dorsal,potentialWingMask_RH_dorsal,dorsal_key,numberOfIntervalDegree);
-    disp('Grids of dorsal wing is generated');
+    disp('Grids of dorsal wing have been generated');
 
     %ventral image
     gridsParameter_ventral=allWingGrids(potentialWingMask_LF_ventral,potentialWingMask_RF_ventral,ventral_flip_wingLH,ventral_flip_wingRH,ventral_key_flip,numberOfIntervalDegree);
-    disp('Grids of ventral wing is generated');
+    disp('Grids of ventral wing have been generated');
 end
 % {1}={seg4PtsLF,wingGridsLF }; %4 key points & grids
 % {2}={seg4PtsRF,wingGridsRF}; %4 key points & grids
@@ -219,12 +219,12 @@ plotGridInspect(potentialWingMask_LF_ventral,potentialWingMask_RF_ventral,ventra
 %saveas(figmask, maskoutname);
 export_fig(figinsp,inspvisoutname, '-jpg','-r200');
 close(figinsp);
-disp('Two images showing keys ang grids of both sides of a specimen has been saved.');
+disp('Two images showing keys and grids of both sides of a specimen have been saved.');
 
 %%
 %Tail analysis
 disp('Start to analyze tails.');
-tailMinArea=20; %The value here determine how small can a region be defined as a tail
+tailMinArea=20; %The value here determines how small of a region can be defined as a tail
  tailinfo_dorsal_L=tail_module2(gridsParameter_dorsal, dorsal_scale, tailMinArea, 'L');
  tailinfo_dorsal_R=tail_module2(gridsParameter_dorsal, dorsal_scale, tailMinArea, 'R');
  tailinfo_ventral_L=tail_module2(gridsParameter_ventral, ventral_scale, tailMinArea, 'L');
@@ -235,24 +235,24 @@ tailMinArea=20; %The value here determine how small can a region be defined as a
  tail_morph={tailinfo_dorsal_L, tailinfo_ventral_L, tailinfo_dorsal_R, tailinfo_ventral_R};
 disp('Tails done.');
 %%
-disp('Start to analyze antenna and body.');
+disp('Start to analyze antennae and body.');
 %Antennae data, Body data
 %The body length and width (in cm)
-%Antennae length, width, bolb width, degree of curved (all in cm); first row is left one, second is right one.
+%Antennae length, width, bulb width, degree of curvature (all in cm); first row is left one, second is right one.
 body_morph=[both_sides_morph{1}{1}{14};both_sides_morph{2}{1}{14}];
 dorsal_ant=both_sides_morph{1}{1}{15};
 ventral_ant=both_sides_morph{2}{1}{15};
 body_ant_morph={body_morph,[dorsal_ant(1,:);ventral_ant(1,:)],[dorsal_ant(2,:);ventral_ant(2,:)]};
 %{1}=body length and width (in cm) (dorsal and ventral side in two rows)
-%{2}= Antennae length, width, bolb width, degree of curved (all in mm); Left antennae; first row is dorsal side, second is ventral side.
-%{3}= Antennae length, width, bolb width, degree of curved (all in mm); Right antennae; first row is dorsal side, second is ventral side.
+%{2}= Antenna length, width, bulb width, degree of curvature (all in mm); Left antenna; first row is dorsal side, second is ventral side.
+%{3}= Antenna length, width, bulb width, degree of curvature (all in mm); Right antenna; first row is dorsal side, second is ventral side.
 
 %Antennae mask
 %Use dorsal image
 ants_d=dorsal_seg==6;
 %Use ventral-flip image
 ants_v=ventral_seg_flip==6;
-disp('Antenna done.');
+disp('Antennae done.');
 %%
 try
     try
@@ -278,7 +278,7 @@ try
             sppmat=sppmat0.(fieldName);
             clear sppmat0;
             matInNames{sideID}=matinname;
-            disp([matinname,' has been read into system and ready for process.']);
+            disp([matinname,' has been read into system and is ready for processing.']);
             
             disp('Begin to summarize multi-spectral reflectance into grids');
             sppAllGridSummary=cell(0,10);
@@ -311,7 +311,7 @@ try
                     nullAreaRH=zeros(size(baseImg,1),size(baseImg,2));
                 end
 
-                %Grids summary for forewings
+                %Grid summary for forewings
                 gridSummaryMeanSELF=summarizeByGrid(baseImg,wingGridsLF,nullAreaLF);
                 gridSummaryMeanSERF=summarizeByGrid(baseImg,wingGridsRF,nullAreaRF);
                 gridSummaryMeanSELH=summarizeByGrid(baseImg,wingGridsLH,nullAreaLH);
@@ -370,13 +370,13 @@ try
         %Antennae extraction
         sppBothSidesAntSummary=extractAntennaReflectance(spp_mat_directory,both_sides_morph, ants_d, ants_v, dorsal_key, ventral_key_flip, dorsal_scale, ventral_scale);
 
-        %Antenna normalization
-        disp('Start to do antenna reflectance summary.');
+        %Antennae normalization
+        disp('Start to do antennae reflectance summary.');
         outPutLevel=100;
         [antennaLRref_rescale, antennaLRrefmm]=antennaNormalization2(sppBothSidesAntSummary, outPutLevel);
-        disp('Antenna reflectance summary done.');
-        disp('Begin to plot antenna reflectance summary.');
-        %Plot antenna
+        disp('Antennae reflectance summary done.');
+        disp('Begin to plot antennae reflectance summary.');
+        %Plot antennae
         antPlotData_L=antennaLRref_rescale{1};
         antPlotData_R=antennaLRref_rescale{2};
         try
@@ -407,12 +407,12 @@ try
         bandGatherList={3,[6,7,8],1,2,[15,16,17],[18,19,20]};
     %     antImg_d=antennaImg(antPlotMat_dorsal, bandGatherList, antImgSize);
     %     antImg_v=antennaImg(antPlotMat_ventral, bandGatherList, antImgSize);
-        antImg_d=antennaImg2(antPlotMat_dorsal, bandGatherList, antImgSize, avgBarWidth); %Provdie also original mean, min, and max reflectance
-        antImg_v=antennaImg2(antPlotMat_ventral, bandGatherList, antImgSize, avgBarWidth); %Provdie also original mean, min, and max reflectance
+        antImg_d=antennaImg2(antPlotMat_dorsal, bandGatherList, antImgSize, avgBarWidth); %Provide also original mean, min, and max reflectance
+        antImg_v=antennaImg2(antPlotMat_ventral, bandGatherList, antImgSize, avgBarWidth); %Provide also original mean, min, and max reflectance
 
-        antImg=cat(1,flip(antImg_d), antImg_v); %Dorsal side at top, Ventral side at bottom, tip in the middle
+        antImg=cat(1,flip(antImg_d), antImg_v); %Dorsal side at top, ventral side at bottom, tip in the middle
 
-        %Save antenna mean
+        %Save antennae mean
         antvisoutname=fullfile(Result_directory,'dorsal_ventral_map',subFolderList{2},['b_',subsubFolderList{11}],[barcode,'_',subsubFolderList{11},'_res-',num2str(outPutLevel),'_dv_allBands-mean_rescale.jpg']);
         figinsp=figure('visible', 'off');
         imshow(antImg);hold on;
@@ -426,9 +426,9 @@ try
         end
         export_fig(figinsp,antvisoutname, '-jpg','-r200');
         close(figinsp);
-        disp('Antenna reflectance summary has been saved');
+        disp('Antennae reflectance summary has been saved');
     catch
-        disp('Cannot process antenna reflectance summary');
+        disp('Cannot process antennae reflectance summary');
         procedureFlag=procedureFlag+2;
     end
     %%
@@ -440,19 +440,19 @@ try
     if procedureFlag~=1 && procedureFlag~=3
         allResult{2}=sppBothSidesGridSummary; %All reflectance grids summary
     else
-        allResult{2}=-9999; %No reflectance grids summary
+        allResult{2}=-9999; %No reflectance grid summary
     end
     allResult{3}=[dorsal_scale,ventral_scale]; %scale length of dorsal and ventral images
     allResult{4}={[both_sides_morph{1}{2},'_',vdlist{both_sides_morph{1}{3}},both_sides_morph{1}{4},'_morph-seg.mat'],...
-    [both_sides_morph{2}{2},'_',vdlist{both_sides_morph{2}{3}},both_sides_morph{2}{4},'_morph-seg.mat'],matInNames{1},matInNames{2}}; %orifinal file info
+    [both_sides_morph{2}{2},'_',vdlist{both_sides_morph{2}{3}},both_sides_morph{2}{4},'_morph-seg.mat'],matInNames{1},matInNames{2}}; %original file info
     allResult{5}=tail_morph; %All information related to the tails
-    allResult{6}=body_ant_morph; %Copied information related to body size and antenna
+    allResult{6}=body_ant_morph; %Copied information related to body size and antennae
     if  procedureFlag<2
-        allResult{7}={antennaLRref_rescale, antennaLRrefmm, sppBothSidesAntSummary}; %antenna reflectance
+        allResult{7}={antennaLRref_rescale, antennaLRrefmm, sppBothSidesAntSummary}; %antennae reflectance
     else
-        allResult{7}=-9999; %No antenna reflectance
+        allResult{7}=-9999; %No antennae reflectance
     end
-    %Save all result
+    %Save all results
     matoutname=fullfile(Result_directory,'dorsal_ventral_map',subFolderList{3},[barcode,'_res-',num2str(2^numberOfIntervalDegree),'x',num2str(2^numberOfIntervalDegree),'_d-v_gridsPars',processingFlagList{procedureFlag+1},'.mat']);
     save(matoutname,'allResult'); %save the specimen matrix
     disp(['################################']);
@@ -469,17 +469,17 @@ try
         movefile(fullfile(morph_mat_directory,[barcodein,'*morph-seg.mat']),fullfile(morph_mat_directory,finishedDir));
     end
 catch
-    disp('Begin to save all summary matrices WITHOUT reflectance grids or antenna reflectance.');
+    disp('Begin to save all summary matrices WITHOUT reflectance grids or antennae reflectance.');
     allResult=cell(0,4);
     allResult{1}={gridsParameter_dorsal,gridsParameter_ventral}; %All parameters and grids
-    allResult{2}=-9999; %No reflectance grids summary
+    allResult{2}=-9999; %No reflectance grid summary
     allResult{3}=[dorsal_scale,ventral_scale]; %scale length of dorsal and ventral images
     allResult{4}={[both_sides_morph{1}{2},'_',vdlist{both_sides_morph{1}{3}},both_sides_morph{1}{4},'_morph-seg.mat'],...
-    [both_sides_morph{2}{2},'_',vdlist{both_sides_morph{2}{3}},both_sides_morph{2}{4},'_morph-seg.mat'],'No_reflectance-band_matrix','No_reflectance-band_matrix'}; %orifinal file info
+    [both_sides_morph{2}{2},'_',vdlist{both_sides_morph{2}{3}},both_sides_morph{2}{4},'_morph-seg.mat'],'No_reflectance-band_matrix','No_reflectance-band_matrix'}; %original file info
     allResult{5}=tail_morph; %All information related to the tails
-    allResult{6}=body_ant_morph; %Copied information related to body size and antenna
-    allResult{7}=-9999; %No antenna reflectance
-    %Save all result
+    allResult{6}=body_ant_morph; %Copied information related to body size and antennae
+    allResult{7}=-9999; %No antennae reflectance
+    %Save all results
     matoutname=fullfile(Result_directory,'dorsal_ventral_map',subFolderList{3},[barcode,'_res-',num2str(2^numberOfIntervalDegree),'x',num2str(2^numberOfIntervalDegree),'_d-v_gridsPars-no_reflectance.mat']);
     save(matoutname,'allResult'); %save the specimen matrix
     disp(['################################']);
@@ -515,10 +515,10 @@ end
                 %{2}{}{8}=whitePo2
                 %{2}{}{9}=FinRGB
                 %{2}{}{10}=PolDiff
-                    %{2}{}{}{1}=left fore wing
-                    %{2}{}{}{2}=right fore wing
-                    %{2}{}{}{3}=left hind wing
-                    %{2}{}{}{4}=right hind wing
+                    %{2}{}{}{1}=left forewing
+                    %{2}{}{}{2}=right forewing
+                    %{2}{}{}{3}=left hindwing
+                    %{2}{}{}{4}=right hindwing
                         %{2}{}{}{}{1}=mean reflectance in a grid (gray scale: single layer; RGB: 3 layers)
                         %{2}{}{}{}{2}=standard error of reflectance in a grid (gray scale: single layer; RGB: 3 layers)
       %{3}=scale length of dorsal and ventral images
@@ -536,25 +536,25 @@ end
             %{5}{4}=ventral_RH tails (-9999 represents no tail)
                 %{5}{}{N}= No. N tail part
                     %{5}{}{}{1}= tail mask
-                    %{5}{}{}{2}= raw coordinations of tail base (the part connect to hind wing; points of two ends and the mid point are provided [mid-point is at second row])
-                    %{5}{}{}{3}= summary grid coordinations of tail base (the part connect to hind wing; points of two ends and the mid point are provided [mid-point is at second row])
+                    %{5}{}{}{2}= raw coordinations of tail base (the part connect to hindwing; points of two ends and the mid-point are provided [mid-point is at second row])
+                    %{5}{}{}{3}= summary grid coordinations of tail base (the part connect to hindwing; points of two ends and the mid-point are provided [mid-point is at second row])
                     %{5}{}{}{4}= [tail-base boundary Length, tail length, tail area, tail width, tailCurvature] (in cm; curvature is unit less)
-        %{6}= information related to body size and antenna
+        %{6}= information related to body size and antennae
             %{6}{1}=body length and width (in cm) (dorsal and ventral sides are in two rows)
-            %{6}{2}= Antennae length, width, bolb width, degree of curved (all in mm); LEFT antennae; first row is dorsal side, second is ventral side.
-            %{6}{3}= Antennae length, width, bolb width, degree of curved (all in mm); RIGHT antennae; first row is dorsal side, second is ventral side.
-        %{7}= All reflectance on antenna; if it's not applicable, use -9999 as a placeholder
-            %{7}{1}= Mean reflectance rescale to 100 grids from the tip of antennae to its base
-            %{7}{2}= Mean reflectance every 0.1 mm from the tip of antennae to its base
-                %{7}{1|2}{1}= Left antennae
-                %{7}{1|2}{2}= Right antennae
+            %{6}{2}= Antenna length, width, bulb width, degree of curvature (all in mm); LEFT antenna; first row is dorsal side, second is ventral side.
+            %{6}{3}= Antenna length, width, bulb width, degree of curvature (all in mm); RIGHT antenna; first row is dorsal side, second is ventral side.
+        %{7}= All reflectance on antennae; if it's not applicable, use -9999 as a placeholder
+            %{7}{1}= Mean reflectance rescale to 100 grids from the tip of antenna to its base
+            %{7}{2}= Mean reflectance every 0.1 mm from the tip of antenna to its base
+                %{7}{1|2}{1}= Left antenna
+                %{7}{1|2}{2}= Right antenna
                     %{7}{1|2}{}(: , : , 1)= dorsal side
                     %{7}{1|2}{}(: , : , 2)= ventral side
-                    %{7}{1|2}{}(: , 1 , :)= distance to the tip of antennae (mm)
+                    %{7}{1|2}{}(: , 1 , :)= distance to the tip of antenna (mm)
                     %{7}{1|2}{}(: , 2:21, :)= spectral reflectance (740, 940, UV, UVF, F, white (R, G, B), whitePo1 (R, G, B), whitePo2 (R, G, B), FinRGB (R, G, B), PolDiff (R, G, B))
             %{7}{3}= Raw reflectance value (raw pixel-based value)
-                %{7}{3}{1}= Left antennae
-                %{7}{3}{2}= Right antennae
+                %{7}{3}{1}= Left antenna
+                %{7}{3}{2}= Right antenna
                     %{7}{3}{}{1}= reflectance matrix
                         %{7}{3}{}{1}(:,1)= Percentage from the tip
                         %{7}{3}{}{1}(:,2:21)= spectral reflectance (740, 940, UV, UVF, F, white (R, G, B), whitePo1 (R, G, B), whitePo2 (R, G, B), FinRGB (R, G, B), PolDiff (R, G, B))

@@ -10,7 +10,7 @@ function [chain] = mk_chain(img)
 
 %as bwtraceboundary needs an intial direction, choose the 
 %first one that works
-%The order make sure the outline is discovered clock-wise
+%The order make sure the outline is discovered clockwise
 
 if img(start_r-1,start_c) == 1
     dir = 'N';
