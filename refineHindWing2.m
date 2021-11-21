@@ -1,11 +1,9 @@
 function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,LRside,ornamentRatio)
     %Use wingLH as model for development
-%     wingMask=wingLH;
-%     [B0,~]=bwboundaries(wingMask);
-%     edgePt=B0{1};
 
     %Remove ornament
     amountErode=round(nnz(wingMask)/3000);
+    if amountErode>200; amountErode=200; end %A special setting for jumbo specimens
     wingreduce=imdilate(bwareafilt(imerode(wingMask,strel('disk',amountErode)),1),strel('disk',amountErode));
 
     %make a fully closed shape
@@ -26,14 +24,13 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
     reconstructPts0 = [x_; x_(1,1) x_(1,2)]+chainBeginPt; % Make it closed contour
     reconstructPts=[reconstructPts0(:,1),size(wingreduce,1)-reconstructPts0(:,2)];
 
+%     Scripts below are saved for debugging purposes
 %     %Plot on the shape without ornament
 %     figure,imshow(wingreduce);hold on;
 %     plot(reconstShape(:,1),reconstShape(:,2),'b','LineWidth',2);
 %     plot(reconstructPts(:,1), reconstructPts(:,2), 'r','LineWidth',2);
 %     
 
-
-%     LRside='L';
     if LRside=='L'
         lower_wing_body_join=in_key(7,:);
         keyPts=[in_key(2,:) ;in_key(6,:) ];
@@ -41,16 +38,6 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
         lower_wing_body_join=in_key(9,:);
         keyPts=[in_key(3,:) ;in_key(5,:) ];
     end
-
-
-    % dist = sqrt((reconstructPts(:,1)-lower_wing_body_join(1)).^2 + (reconstructPts(:,2)-lower_wing_body_join(2)).^2);
-    % reconstructiniPt=find(dist==min(dist));
-    % reconstructPts2=[reconstructPts(reconstructiniPt:length(reconstructPts),:) ; reconstructPts(1:reconstructiniPt-1,:)];
-    % dist2=sqrt((reconstructPts2(:,1)-lower_wing_body_join(1)).^2 + (reconstructPts2(:,2)-lower_wing_body_join(2)).^2);
-
-    %slope = atand((reconstructPts(:,2)-lower_wing_body_join(2)) ./ (reconstructPts(:,1)-lower_wing_body_join(1))) ;
-    % figure,plot(dist);daspect([1 1 1]);
-    % figure,plot(slope);daspect([1 1 1]);
 
     %%Determine which bounding shape is more suitable
     [sideTrix,sideTriy] = minboundtri(reconstructPts(:,1),reconstructPts(:,2));
@@ -66,12 +53,8 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
         canRecxy=[rectx(1:end-1),recty(1:end-1)];
         if LRside=='L'
             farestPts=findClosest2Pts(canRecxy,[0,size(wingMask,1)]);
-%             farestPt=findCloestPt(canRecxy,[0,size(wingMask,1)]);
-%             remainRecxy=findCloestPt(canRecxy,[0,size(wingMask,1)/2]);
         elseif LRside=='R'
             farestPts=findClosest2Pts(canRecxy,flip(size(wingMask)));
-%             farestPt=findCloestPt(canRecxy,flip(size(wingMask)));
-%             remainRecxy=findCloestPt(canRecxy,[size(wingMask,2),size(wingMask,1)/2]);
         end
         farestPt=farestPts(farestPts(:,2)==max(farestPts(:,2)),:);
         remainRecxy=farestPts(farestPts(:,2)==min(farestPts(:,2)),:);
@@ -93,8 +76,7 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
     
     reconstructRegPtH=[lower_wing_body_join; reconstructWingTip; reconstructSideTip];
 
-%     ornamentRatio=1/150;
-    ornamentThreshold=nnz(wingMask)*ornamentRatio; %Define the threshold to keep for refined mask (objects will be defined as ornament among this threshold)
+    ornamentThreshold=nnz(wingMask)*ornamentRatio; %Define the threshold to keep for refined mask (objects will be defined as ornament within this threshold)
 %     if ornamentThreshold>100, ornamentThreshold=200;, end; %Set a maximum to the threshold
     %Project the reconstruct shape on the original shape
     reconstructFFTShp = roipoly(wingMask,reconstructPts(:,1),reconstructPts(:,2));
@@ -105,49 +87,42 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
     
     overlapAreaRef = imdilate(reconstructFFTShp,strel('disk',10)) & wingMask;
     remainAreaRef = wingMask~=overlapAreaRef;
-%     keepAreaRef = bwareafilt(remainAreaRef,[0, ornamentThreshold]);
     [refB,refL] = bwboundaries(remainAreaRef,'noholes');
-
-    %statsed = regionprops(edL,'Area','Centroid');
     if ~isempty(refB)
         retainIdx=zeros(length(refB),3);
         for edID=1:length(refB)
             orn=refL==edID;
-%             if nnz(orn)>=5
                 [idx,idy]=find(orn);
-%                 if ~isempty(idx)
                 Lorn=bwselect(edL,idy(ceil(length(idx)/2)),idx(ceil(length(idx)/2)));
-%                 figure,imshowpair(orn,Lorn);
                 reducedAreaRatio=nnz(immultiply(imcomplement(orn),Lorn))/nnz(Lorn);
                 if reducedAreaRatio>0.5 %If the reduced area is over 50%, the part must be attached closely to the main mask but not point out
                     retainIdx(edID,:)=[mean(edL(Lorn),'all'), nnz(orn), 1];
                 else
                     retainIdx(edID,:)=[mean(edL(Lorn),'all'), nnz(orn), 0];
                 end
-%                 else
-%                     keepArea=keepArea | orn;
-%                 end
-%             end
         end
         retainCandidates=retainIdx(retainIdx(:,3)==1,:);
-%         retainIdx2=retainIdx;
-        decisionIdx=[];
-        for retID=1:size(retainCandidates,1)
-            subIdx=retainIdx(retainIdx(:,1)==retainCandidates(retID,1),:);
-            decisionIdx0=[subIdx(1,1), subIdx(subIdx(:,2)==max(subIdx(:,2)),3)]; %Keep or not determined by the elements with the largest area
-            if size(decisionIdx0,1)>1,  decisionIdx0= decisionIdx0(1,:);, end; 
-            decisionIdx=[decisionIdx ; decisionIdx0];
-        end
-        
-        if ~isempty(decisionIdx)
-        retainIdxf=decisionIdx(decisionIdx(:,2)==1,1);
-            if ~isempty(retainIdxf)
-                retainMask=ismember(edL,retainIdxf);
-                keepArea=keepArea | retainMask;
+
+        try
+            decisionIdx=[];
+            for retID=1:size(retainCandidates,1)
+                subIdx=retainIdx(retainIdx(:,1)==retainCandidates(retID,1),:);
+                subIdx2=subIdx(:,2)==max(subIdx(:,2)); %To prevent 2 maximum
+                decisionIdx0=[subIdx(1,1), subIdx(subIdx2(1), 3)]; %Keep or not determined by the elements with the largest area
+                if size(decisionIdx0,1)>1,  decisionIdx0= decisionIdx0(1,:);, end; %To prevent 2 candidates
+                decisionIdx=[decisionIdx ; decisionIdx0];
             end
+
+            if ~isempty(decisionIdx)
+                    retainIdxf=decisionIdx(decisionIdx(:,2)==1,1);
+                    if ~isempty(retainIdxf)
+                        retainMask=ismember(edL,retainIdxf);
+                        keepArea=keepArea | retainMask;
+                    end
+            end
+        catch
         end
     end
-    
     
     for edID=1:length(edB)
         obj=flip(edB{edID},2);
@@ -188,7 +163,8 @@ function [refineArea,regPtH,reconstructRegPtH]=refineHindWing2(wingMask,in_key,L
         sideTip=findRadiativeCloestPt(refineAreaEdgePt2,reconstructSideTip);
         regPtH=[lower_wing_body_join; wingTip; sideTip];
     end
-% 
+    
+%     Scripts below are saved for debugging purposes
 %     %Plot on the original shape
 %     figure,imshow(wingMask);hold on;
 %     plot(refineAreaEdgePt(:,1),refineAreaEdgePt(:,2),'b','LineWidth',1.5);
