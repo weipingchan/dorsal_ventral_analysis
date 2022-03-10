@@ -38,7 +38,7 @@ end
 
 if pdist2(kPt1,segEdgePts2(1,:))<pdist2(kPt2,segEdgePts2(1,:))
     segEdgePts3=[kPt1; segEdgePts2; kPt2] ;
-elseif pdist2(kPt1,segEdgePts2(1,:))>pdist2(kPt2,segEdgePts2(1,:))
+elseif pdist2(kPt1,segEdgePts2(1,:))>=pdist2(kPt2,segEdgePts2(1,:))
     segEdgePts3=[kPt2; segEdgePts2; kPt1] ;
 end
 
