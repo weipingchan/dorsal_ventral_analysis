@@ -101,7 +101,7 @@ function tailinfo=tail_module2(gridsParameter_dorsal, scale, tailMinArea, side)
                     %Measure the length of the shared boundary between tail and
                     %main wing part
                     boundary=immultiply(imdilate(tail,strel('disk',1)),imdilate(refineAreaH,strel('disk',1)));
-                    boundaryIt=bwskel(boundary);
+                    boundaryIt=bwskel(logical(boundary));
         %             stat=regionprops(boundaryIt,'perimeter');  %faster way
         %             tailBoundaryL = (stat.Perimeter-2)/2;  %34.4220
                     [ib,jb] = find(bwmorph(boundaryIt,'endpoints'));
