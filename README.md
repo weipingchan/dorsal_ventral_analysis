@@ -1,6 +1,17 @@
-# dorsal_ventral_analysis
- This is the script used to align dorsal and ventrla view of a wing. It also generates the second-level product, whcih contains grided multispectral reflectance data, wing shapes, and measurements of body size and antenna.
-# Output data sturecutre (also included in the corresponding scripts):
+# dorsal ventral analysis
+ This is the library used to align dorsal and ventrla view of a wing. It also generates the second-level product, whcih contains grided multispectral reflectance data, wing shapes, and measurements of body size and antenna.
+ 
+Please find the article describing the application of this script below (DOI: 10.1038/s42003-022-04282-z):
+(https://www.nature.com/articles/s42003-022-04282-z)
+
+Please find the link for the corresponding protocol:
+(https://www.protocols.io/private/F3292DF1FE0211EB878B0A58A9FEAC02)
+
+Please cite this work as:
+Chan, W-P., Rabideau Childers, R., Ashe, S. *et al.* A high-throughput multispectral imaging system for museum specimens. *Commun Biol* **5**, 1318 (2022).
+
+ 
+## Output data sturecutre (also included in the corresponding scripts):
       %{1}=All parameters and grids
             %{1}{1}=dorsal
             %{1}{2}=ventral
